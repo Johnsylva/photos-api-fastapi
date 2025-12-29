@@ -67,3 +67,21 @@ class PhotoResponse(BaseModel):
 
     class Config:
         from_attributes = True  # Allows converting SQLAlchemy model to Pydantic
+
+
+# Seed data (like db/seeds.rb)
+def seed_data():
+    db = SessionLocal()
+    if db.query(Photo).count() == 0:
+        photos = [
+            Photo(name="Mountain Lake", url="https://via.placeholder.com/400X300", width=400, height=300),
+            Photo(name="City Skyline", url="https://via.placeholder.com/400X300", width=400, height=300)
+        ]
+        db.add_all(photos)
+        db.commit()
+        print("Sample photos created!")
+    db.close()
+
+# Run on startup
+seed_data()
+
