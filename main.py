@@ -85,3 +85,11 @@ def seed_data():
 # Run on startup
 seed_data()
 
+# INDEX - GET /photos
+@app.get("/photos", response_model=list[PhotoResponse])
+def index():
+    db = SessionLocal()
+    photos = db.query(Photo).all() # Like Photo.all in Rails
+    db.close()
+    return photos
+
