@@ -114,6 +114,22 @@ def show(id: int):
         raise HTTPException(status_code=404, detail="Photo not found")
     return photo
 
+# UPDATE - PATCH /photos/{id}
+@app.patch("/photos/{id}", response_model=PhotoResponse)
+def update(id: int, photo_data: PhotoUpdate):
+    db = SessionLocal()
+    photo = db.query(Photo).filter(Photo.id==id).first()
+    if not photo:
+        db.close()
+        raise HTTPException(status_code=404, detail="Photo not found")
+    
+    update_data = photo_data.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(photo, key, value)
 
+    db.commit()
+    db.refresh(photo)
+    db.close()
+    return photo
 
 
