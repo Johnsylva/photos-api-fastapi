@@ -104,5 +104,16 @@ def create(photo_data: PhotoCreate):
     db.close()
     return photo
 
+#SHOW - GET /photos/{id}
+@app.get("/photos/{id}", response_model=PhotoResponse)
+def show(id: int):
+    db = SessionLocal()
+    photo = db.query(Photo).filter(Photo.id == id).first()          # Like Photo.find(id)
+    db.close()
+    if not photo:
+        raise HTTPException(status_code=404, detail="Photo not found")
+    return photo
+
+
 
 
