@@ -133,3 +133,18 @@ def update(id: int, photo_data: PhotoUpdate):
     return photo
 
 
+#DESTROY -DELETE /photos/{id}
+@app.delete("/photos/{id}", status_code=204)
+def destroy(id: int):
+    db = SessionLocal()
+    photo = db.query(Photo).filter(Photo.id == id).first()
+    if not photo:
+        db.close()
+        raise HTTPException(status_code=404, detail="Photo not found")
+    
+    db.delete(photo)    # Like photo.destroy in Rails
+    db.commit()
+    db.close()
+    return None # HTTP 204 No Content
+
+
