@@ -93,3 +93,16 @@ def index():
     db.close()
     return photos
 
+#CREATE -POST /photos
+@app.post("/photos", response_model=PhotoResponse, status_code=201)
+def create(photo_data: PhotoCreate):
+    db = SessionLocal()
+    photo = Photo(**photo_data.model_dump()) 
+    db.add(photo)
+    db.commit()
+    db.refresh(photo)
+    db.close()
+    return photo
+
+
+
